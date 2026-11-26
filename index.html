@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>VisuSub — Interaktiv 2D &amp; 3D O‘quv Laboratoriyasi</title>
+	<link rel="stylesheet" href="css/style.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+	<!-- Yuqori navigatsiya -->
+	<header class="navbar">
+		<div class="logo">
+			<span class="logo-dot"></span>
+			<span>Visu<strong>Sub</strong></span>
+		</div>
+		<nav class="nav-actions" id="navActions">
+			<button class="btn btn-ghost" id="openLoginBtn">Kirish</button>
+			<button class="btn btn-primary" id="openSignupBtn">Ro‘yxatdan o‘tish</button>
+		</nav>
+	</header>
+
+	<!-- 1-EKRAN: Kirish (Entry) sahifasi -->
+	<main id="entryScreen" class="entry-screen">
+		<div class="hero-text">
+			<span class="badge">Interaktiv Ta’lim Platformasi</span>
+			<h1>Murakkab shakllarni <span>ko‘rib</span> va <span>qo‘l bilan</span> tushuning</h1>
+			<p>
+				Geometriya va aniq fanlar uchun 2D/3D laboratoriya. Piramidani aylantiring,
+				kesim balandligini o‘zgartiring yoki boshlash uchun <strong>shakl ustiga bosing</strong>.
+			</p>
+
+			<!-- Kesim balandligini boshqarish slayderi -->
+			<div class="control-card">
+				<div class="control-header">
+					<label for="cutSlider">Kesim tekisligi balandligi (h):</label>
+					<span id="cutValue">50%</span>
+				</div>
+				<input type="range" id="cutSlider" min="10" max="90" value="50" />
+			</div>
+
+			<div class="hero-buttons">
+				<button class="btn btn-primary btn-lg" id="startBtn">Laboratoriyaga kirish</button>
+				<button class="btn btn-outline btn-lg" id="demoBtn">Mehmon (Demo) rejimi</button>
+			</div>
+		</div>
+
+		<!-- Interaktiv 3D Canvas maydoni -->
+		<div class="canvas-wrapper" id="canvasWrapper" title="Kirish uchun piramidaga bosing">
+			<div id="threeContainer"></div>
+			<div class="canvas-hint">Aylantirish uchun suring • Kirish uchun bosing</div>
+		</div>
+	</main>
+
+	<!-- 2-EKRAN: Fanlar Hubi -->
+	<section id="hubScreen" class="hub-screen hidden">
+		<div class="hub-header">
+			<div>
+				<h2 id="welcomeUser">Xush kelibsiz!</h2>
+				<p>Amaliy laboratoriya yo‘nalishini tanlang:</p>
+			</div>
+			<button class="btn btn-outline" id="logoutBtn">Chiqish</button>
+		</div>
+
+		<div class="subjects-grid">
+			<div class="subject-card active-card" id="openGeometryLab">
+				<div class="card-top">
+					<span class="status-tag live">Faol modul</span>
+					<span class="card-icon">📐</span>
+				</div>
+				<h3>Matematika &amp; Geometriya</h3>
+				<p>3D shakllar, tekislik kesimlari, o‘zaro joylashtirish va 2D yoyilma tahlili.</p>
+				<span class="card-link">Laboratoriyani ochish →</span>
+			</div>
+
+			<div class="subject-card soon-card">
+				<div class="card-top">
+					<span class="status-tag soon">Tez kunda</span>
+					<span class="card-icon">⚡</span>
+				</div>
+				<h3>Fizika &amp; Mexanika</h3>
+				<p>Kuchlar muvozanati, optika va kinematika simulyatsiyalari.</p>
+			</div>
+
+			<div class="subject-card soon-card">
+				<div class="card-top">
+					<span class="status-tag soon">Tez kunda</span>
+					<span class="card-icon">🤖</span>
+				</div>
+				<h3>Robototexnika</h3>
+				<p>Sensorlar, kinematika va yo‘l rejalashtirish modullari.</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- LOG IN / SIGN UP MODALI -->
+	<div id="authModal" class="modal-backdrop hidden">
+		<div class="modal-card">
+			<button class="modal-close" id="closeModalBtn">&times;</button>
+
+			<div class="auth-tabs">
+				<button class="tab-btn active" data-tab="login">Kirish</button>
+				<button class="tab-btn" data-tab="signup">Ro‘yxatdan o‘tish</button>
+			</div>
+
+			<!-- Login Form -->
+			<form id="loginForm" class="auth-form">
+				<div class="form-group">
+					<label>Email yoki Login</label>
+					<input type="text" id="loginUser" placeholder="masalan: ustoz@visusub.uz" required />
+				</div>
+				<div class="form-group">
+					<label>Parol</label>
+					<input type="password" id="loginPass" placeholder="••••••••" required />
+				</div>
+				<button type="submit" class="btn btn-primary btn-full">Tizimga kirish</button>
+			</form>
+
+			<!-- Signup Form -->
+			<form id="signupForm" class="auth-form hidden">
+				<div class="form-group">
+					<label>Ismingiz</label>
+					<input type="text" id="signupName" placeholder="Ism va familiya" required />
+				</div>
+				<div class="form-group">
+					<label>Rolingizni tanlang</label>
+					<div class="role-selector">
+						<label class="role-option">
+							<input type="radio" name="role" value="O‘quvchi" checked />
+							<span>O‘quvchi</span>
+						</label>
+						<label class="role-option">
+							<input type="radio" name="role" value="O‘qituvchi" />
+							<span>O‘qituvchi</span>
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label>Email</label>
+					<input type="email" id="signupEmail" placeholder="email@example.com" required />
+				</div>
+				<div class="form-group">
+					<label>Parol yarating</label>
+					<input type="password" id="signupPass" placeholder="Kamida 6 ta belgi" required />
+				</div>
+				<button type="submit" class="btn btn-primary btn-full">Hisob yaratish</button>
+			</form>
+		</div>
+	</div>
+
+	<script src="js/three-entry.js"></script>
+	<script src="js/app.js"></script>
+</body>
+</html>
